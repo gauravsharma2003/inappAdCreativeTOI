@@ -101,6 +101,12 @@
             transition: opacity 250ms ease;
         }
 
+        /* Overlay layer for the animated GIF */
+        .video-wrap img.gif-layer {
+            z-index: 2;
+            pointer-events: none;
+        }
+
         .video-wrap.is-loaded .video-placeholder {
             opacity: 0;
         }
@@ -249,6 +255,28 @@
                 font-size: 16px;
             }
         }
+        @media (max-width: 320px) and (max-height: 480px) {
+            .ad-container {
+                max-width: 320px;
+            }
+            .ad-frame {
+                aspect-ratio: 2 / 3; 
+                padding: 10px;
+                gap: 10px;
+            }
+            .video-wrap {
+                width: 92%; 
+                border-radius: calc(var(--radius) * 0.6);
+            }
+            .headline { font-size: 14px; }
+            .logo { width: clamp(44px, 16%, 64px); }
+            .game-title { font-size: clamp(15px, 5.6vw, 20px); }
+            .subtitle { font-size: clamp(11px, 4vw, 13px); }
+            .cta {
+                min-height: 40px;
+                padding: 10px 16px;
+            }
+        }
     </style>
 </head>
 
@@ -258,6 +286,7 @@
             <div class="video-wrap" id="videoWrap">
                 <div class="video-placeholder" aria-hidden="true"></div>
                 <img id="adImage" alt="" decoding="async" loading="eager" />
+                <img id="adGif" class="gif-layer" alt="" decoding="async" loading="eager" />
                 <video id="adVideo" playsinline webkit-playsinline muted autoplay preload="auto">
                     <source id="videoSource" src="" type="video/mp4" />
                 </video>
@@ -280,12 +309,13 @@
         const content = {
             gameName: "Connect",
             headline: "Connect start to end - its that simple",
-            // toGameText: "Play the game",
             ctaText: "Play Now",
             ctaUrl: "https://timesofindia.onelink.me/mjFd/connectplay",
             logoUrl: "https://static.toiimg.com/photo/122115391.cms",
             subtitle: "The perfect trace",
-            videoUrl: "https://static.toiimg.com/photo/123182688.cms"
+            placeholderUrl: "https://static.toiimg.com/photo/123183744.cms",
+            gifUrl: "https://static.toiimg.com/photo/123182688.cms",
+            gifDurationMs: 3944
         };
 
         (function initAd(cfg) {
@@ -298,7 +328,7 @@
             const videoWrapEl = document.getElementById("videoWrap");
             const videoEl = document.getElementById("adVideo");
             const imageEl = document.getElementById("adImage");
-            const videoSourceEl = document.getElementById("videoSource");
+            const gifEl = document.getElementById("adGif");
 
             headlineEl.textContent = cfg.headline || "";
             ctaTextEl.textContent = cfg.ctaText || "Play Now";
@@ -314,19 +344,34 @@
             if (gameSubtitleEl) {
                 gameSubtitleEl.textContent = cfg.subtitle || "The perfect trace";
             }
-            if (cfg.videoUrl && typeof cfg.videoUrl === "string" && cfg.videoUrl.trim() !== "") {
-                const mediaUrl = cfg.videoUrl.trim();
+            if (cfg.placeholderUrl && typeof cfg.placeholderUrl === 'string' && cfg.placeholderUrl.trim() !== '') {
                 imageEl.alt = cfg.gameName ? `${cfg.gameName} preview` : 'Ad preview';
-                imageEl.src = mediaUrl;
-                videoEl.style.display = 'none';
+                imageEl.src = cfg.placeholderUrl.trim();
                 imageEl.addEventListener('load', () => {
                     videoWrapEl.classList.add('is-loaded');
                 }, { once: true });
-                setTimeout(() => {
-                    videoWrapEl.classList.add('is-loaded');
-                }, 2500);
+            }
+            
+            videoEl.style.display = 'none';
+            const hasGif = cfg.gifUrl && typeof cfg.gifUrl === 'string' && cfg.gifUrl.trim() !== '';
+            if (hasGif) {
+                gifEl.alt = cfg.gameName ? `${cfg.gameName} animation` : 'Ad animation';
+                gifEl.src = cfg.gifUrl.trim();
+                const durationMs = 3944;
+                const safetyBufferMs = 0.01; 
+                gifEl.addEventListener('load', () => {
+                    gifEl.style.opacity = '1';
+                    const totalMs = (durationMs * 3) + safetyBufferMs;
+                    setTimeout(() => {
+                        gifEl.style.opacity = '0';
+                        setTimeout(() => { gifEl.style.display = 'none'; }, 0);
+                    }, totalMs);
+                }, { once: true });
+                gifEl.addEventListener('error', () => {
+                    gifEl.style.display = 'none';
+                }, { once: true });
             } else {
-                videoEl.style.display = "none";
+                gifEl.style.display = 'none';
             }
         })(content);
     </script>
