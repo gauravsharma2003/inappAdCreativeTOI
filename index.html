@@ -1,317 +1,365 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Portrait Ad</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --font-family: "Rethink Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      --bg: #ffffff;
-      --video-placeholder: #eeeeee;
-      --text: #111111;
-      --muted: #6b7280;
-      --cta-bg: #000000;
-      --cta-text: #ffffff;
-      --radius: 16px;
-      --spacing: 14px;
-    }
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <title>Portrait Ad</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-family: "Rethink Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            --bg: #ffffff;
+            --video-placeholder: #eeeeee;
+            --text: #111111;
+            --muted: #6b7280;
+            --cta-bg: #000000;
+            --cta-text: #ffffff;
+            --radius: 16px;
+            --spacing: 14px;
+        }
 
-    * { box-sizing: border-box; }
-    html, body {
-      height: 100%;
-      margin: 0;
-      background: var(--bg);
-      font-family: var(--font-family);
-      color: var(--text);
-    }
-    body {
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-    }
+        * {
+            box-sizing: border-box;
+        }
 
-    /* 9:16 portrait container */
-    .ad-container {
-      width: 100%;
-      max-width: 420px;
-      margin: 0 auto;
-      padding: var(--spacing);
-      display: grid;
-      place-items: center;
-    }
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            background: var(--bg);
+            font-family: var(--font-family);
+            color: var(--text);
+        }
 
-    .ad-frame {
-      width: 100%;
-      aspect-ratio: 9 / 16;
-      background: var(--bg);
-      border-radius: var(--radius);
-      /* box-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08); */
-      overflow: hidden;
-      display: grid;
-      grid-template-rows: auto auto auto auto auto;
-      align-items: start;
-      justify-items: center;
-      padding: calc(var(--spacing) * 1.1);
-      gap: calc(var(--spacing) * 1.1);
-    }
+        body {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+        }
 
-    /* Top: square video area */
-    .video-wrap {
-      width: 100%;
-      aspect-ratio: 1 / 1;             /* square */
-      position: relative;
-      border-radius: calc(var(--radius) * 0.75);
-      /* border: 1.5px solid #e5e7eb; light grey border */
-      overflow: hidden;
-      background: var(--video-placeholder);
-      isolation: isolate;
-    }
+        .ad-container {
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto;
+            padding: var(--spacing);
+            display: grid;
+            place-items: center;
+        }
 
-    .video-placeholder {
-      position: absolute;
-      inset: 0;
-      background: var(--video-placeholder);
-      transition: opacity 250ms ease;
-      z-index: 1;
-    }
+        .ad-frame {
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            background: var(--bg);
+            border-radius: var(--radius);
+            /* box-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08); */
+            overflow: hidden;
+            display: grid;
+            grid-template-rows: auto auto auto auto auto;
+            align-items: start;
+            justify-items: center;
+            padding: calc(var(--spacing) * 1.1);
+            gap: calc(var(--spacing) * 1.1);
+        }
 
-    .video-wrap video {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      transition: opacity 250ms ease;
-    }
+        .video-wrap {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            position: relative;
+            border-radius: calc(var(--radius) * 0.75);
+            /* border: 1.5px solid #e5e7eb; light grey border */
+            overflow: hidden;
+            background: var(--video-placeholder);
+            isolation: isolate;
+        }
 
-    .video-wrap.is-loaded .video-placeholder { opacity: 0; }
-    .video-wrap.is-loaded video { opacity: 1; }
+        .video-placeholder {
+            position: absolute;
+            inset: 0;
+            background: var(--video-placeholder);
+            transition: opacity 250ms ease;
+            z-index: 1;
+        }
 
-    /* Headline */
-    .headline {
-      font-size: clamp(14px, 4.5vw, 18px);
-      font-weight: 600;
-      line-height: 1.125;
-      letter-spacing: 0.2px;
-      margin: 0;
-      text-align: center;
-    }
+        .video-wrap video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 250ms ease;
+        }
 
-    /* Middle logo */
-    .logo {
-      width: clamp(56px, 18%, 88px);
-      max-width: 88px;
-      height: auto;
-      object-fit: contain;
-      justify-self: center;
-      filter: none;
-      flex: 0 0 auto;
-    }
+        .video-wrap.is-loaded .video-placeholder {
+            opacity: 0;
+        }
 
-    /* Inline brand row: logo + title/subtitle */
-    .branding {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      width: 100%;
-    }
+        .video-wrap.is-loaded video {
+            opacity: 1;
+        }
 
-    .brand-text {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      min-width: 0; /* allow text to wrap if needed */
-    }
+        .headline {
+            font-size: clamp(14px, 4.5vw, 18px);
+            font-weight: 600;
+            line-height: 1.125;
+            letter-spacing: 0.2px;
+            margin: 0;
+            text-align: center;
+        }
 
-    .game-title {
-      margin: 0;
-      text-align: left;
-      font-size: clamp(16px, 6vw, 24px);
-      font-weight: 700;
-      letter-spacing: 0.2px;
-      line-height: 1.15;
-      color: var(--text);
-    }
+        .logo {
+            width: clamp(56px, 18%, 88px);
+            max-width: 88px;
+            height: auto;
+            object-fit: contain;
+            justify-self: center;
+            filter: none;
+            flex: 0 0 auto;
+        }
 
-    .subtitle {
-      margin: 4px 0 0 0;
-      text-align: left;
-      font-size: clamp(12px, 4.5vw, 14px);
-      font-weight: 600;
-      letter-spacing: 0.2px;
-      line-height: 1.2;
-      color: var(--muted);
-    }
+        .branding {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+        }
 
-    /* CTA - island/pill shape */
-    .cta {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      min-height: 44px;
-      padding: 10px 20px;
-      background: var(--cta-bg);
-      color: var(--cta-text);
-      text-decoration: none;
-      font-weight: 700;
-      border-radius: 9999px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.18);
-      transition: transform 120ms ease, box-shadow 120ms ease;
-      will-change: transform;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      width: 100%;
-      justify-self: stretch;
-    }
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            min-width: 0;
+        }
 
-    .cta:active { transform: translateY(1px) scale(0.98); }
-    .cta:focus-visible {
-      outline: 2px solid #000;
-      outline-offset: 2px;
-    }
+        .game-title {
+            margin: 0;
+            text-align: left;
+            font-size: clamp(16px, 6vw, 24px);
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            line-height: 1.15;
+            color: var(--text);
+        }
 
-    .cta .play-icon {
-      width: 0;
-      height: 0;
-      border-left: 8px solid var(--cta-text);
-      border-top: 6px solid transparent;
-      border-bottom: 6px solid transparent;
-    }
+        .subtitle {
+            margin: 4px 0 0 0;
+            text-align: left;
+            font-size: clamp(12px, 4.5vw, 14px);
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            line-height: 1.2;
+            color: var(--muted);
+        }
 
-    /* Equal spacing between rows; no spacer needed */
+        .cta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 44px;
+            padding: 10px 20px;
+            background: var(--cta-bg);
+            color: var(--cta-text);
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 9999px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22), 0 2px 6px rgba(0, 0, 0, 0.18);
+            transition: transform 120ms ease, box-shadow 120ms ease;
+            will-change: transform;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            width: 100%;
+            justify-self: stretch;
+            position: relative;
+            overflow: hidden;
+        }
 
-    @media (max-width: 360px) {
-      .ad-frame { padding: var(--spacing); }
-      .headline { font-size: 16px; }
-    }
-  </style>
+        .cta:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        .cta:focus-visible {
+            outline: 2px solid #000;
+            outline-offset: 2px;
+        }
+
+        .cta .play-icon {
+            width: 0;
+            height: 0;
+            border-left: 8px solid var(--cta-text);
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+        }
+
+        .cta::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -120%;
+            width: 70%;
+            height: 200%;
+            background: linear-gradient(120deg,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0) 10%,
+                    rgba(255, 255, 255, 0.25) 20%,
+                    rgba(255, 255, 255, 0.25) 30%,
+                    rgba(255, 255, 255, 0.28) 40%,
+                    rgba(255, 255, 255, 0.25) 40%,
+                    rgba(255, 255, 255, 0.25) 50%,
+                    rgba(255, 255, 255, 0) 100%);
+            transform: translateX(0);
+            animation: cta-shimmer 2s ease-out 0.6s 400;
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        @keyframes cta-shimmer {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(300%);
+            }
+        }
+
+        @media (max-width: 360px) {
+            .ad-frame {
+                padding: var(--spacing);
+            }
+
+            .headline {
+                font-size: 16px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <div class="ad-container" role="region" aria-label="Game Ad">
-    <section class="ad-frame" aria-describedby="headline gameTitle gameSubtitle">
-      <!-- Top: square video -->
-      <div class="video-wrap" id="videoWrap">
-        <div class="video-placeholder" aria-hidden="true"></div>
-        <video id="adVideo" playsinline muted autoplay preload="metadata">
-          <source id="videoSource" src="" type="video/mp4" />
-        </video>
-      </div>
+    <div class="ad-container" role="region" aria-label="Game Ad">
+        <section class="ad-frame" aria-describedby="headline gameTitle gameSubtitle">
+            <div class="video-wrap" id="videoWrap">
+                <div class="video-placeholder" aria-hidden="true"></div>
+                <video id="adVideo" playsinline webkit-playsinline muted autoplay preload="auto">
+                    <source id="videoSource" src="" type="video/mp4" />
+                </video>
+            </div>
+            <h1 class="headline" id="headline"></h1>
+            <div class="branding">
+                <img class="logo" id="logo" alt="" />
+                <div class="brand-text">
+                    <h2 class="game-title" id="gameTitle"></h2>
+                    <p class="subtitle" id="gameSubtitle"></p>
+                </div>
+            </div>
+            <a class="cta" id="cta" href="#" target="_blank" rel="noopener">
+                <span id="ctaText"></span>
+            </a>
+        </section>
+    </div>
 
-      <!-- Headline -->
-      <h1 class="headline" id="headline"></h1>
-
-      <!-- Inline brand: logo + game title with subtitle -->
-      <div class="branding">
-        <img class="logo" id="logo" alt="" />
-        <div class="brand-text">
-          <h2 class="game-title" id="gameTitle"></h2>
-          <p class="subtitle" id="gameSubtitle"></p>
-        </div>
-      </div>
-
-      <!-- CTA -->
-      <a class="cta" id="cta" href="#" target="_blank" rel="noopener">
-        <!-- <span class="play-icon" aria-hidden="true"></span> -->
-        <span id="ctaText"></span>
-      </a>
-    </section>
-  </div>
-
-  <script>
-    // Editable JSON content for the ad
-    const content = {
-      gameName: "Connect",
-      headline: "Connect Start to end - its that simple",
-      toGameText: "Play the game",
-      ctaText: "Play Now",
-      ctaUrl: "https://timesofindia.indiatimes.com/games/connect/today",
-      logoUrl: "https://static.toiimg.com/photo/122115391.cms",
-      subtitle: "The perfect trace",
-      // Add your MP4 video URL below. The light grey placeholder shows until this can play.
-      videoUrl: "./connect.mp4" // e.g., "https://cdn.example.com/your-video.mp4"
-    };
-
-    // Populate UI
-    (function initAd(cfg) {
-      const headlineEl = document.getElementById("headline");
-      const logoEl = document.getElementById("logo");
-      const gameTitleEl = document.getElementById("gameTitle");
-      const gameSubtitleEl = document.getElementById("gameSubtitle");
-      const ctaEl = document.getElementById("cta");
-      const ctaTextEl = document.getElementById("ctaText");
-      const videoWrapEl = document.getElementById("videoWrap");
-      const videoEl = document.getElementById("adVideo");
-      const videoSourceEl = document.getElementById("videoSource");
-
-      headlineEl.textContent = cfg.headline || "";
-      ctaTextEl.textContent = cfg.ctaText || "Play Now";
-      ctaEl.href = cfg.ctaUrl || "#";
-      ctaEl.setAttribute("aria-label", (cfg.ctaText || "Play Now") + (cfg.gameName ? (" — " + cfg.gameName) : ""));
-
-      // Logo
-      if (cfg.logoUrl) {
-        logoEl.src = cfg.logoUrl;
-        logoEl.alt = cfg.gameName ? (cfg.gameName + " Logo") : "Game Logo";
-      }
-
-      // Game title and subtitle
-      if (cfg.gameName && String(cfg.gameName).trim()) {
-        gameTitleEl.textContent = String(cfg.gameName).trim();
-      }
-      if (gameSubtitleEl) {
-        gameSubtitleEl.textContent = cfg.subtitle || "The perfect trace";
-      }
-
-      // Video setup with graceful loading
-      if (cfg.videoUrl && typeof cfg.videoUrl === "string" && cfg.videoUrl.trim() !== "") {
-        videoSourceEl.src = cfg.videoUrl.trim();
-        videoEl.load();
-
-        let playCount = 0;
-        const onReady = () => {
-          videoWrapEl.classList.add("is-loaded");
-          // Try to autoplay (muted) on mobile
-          const playAttempt = videoEl.play();
-          if (playAttempt && typeof playAttempt.catch === "function") {
-            playAttempt.catch(() => {
-              // If autoplay fails, keep placeholder visible until user taps CTA
-            });
-          }
+    <script>
+        const content = {
+            gameName: "Connect",
+            headline: "Connect start to end - its that simple",
+            toGameText: "Play the game",
+            ctaText: "Play Now",
+            ctaUrl: "https://timesofindia.onelink.me/mjFd/connectplay",
+            logoUrl: "https://static.toiimg.com/photo/122115391.cms",
+            subtitle: "The perfect trace",
+            videoUrl: "./connect.mp4"
         };
 
-        // Count plays and stop after 3
-        videoEl.addEventListener("ended", () => {
-          playCount += 1;
-          if (playCount < 3) {
-            // restart from beginning for the next loop
-            videoEl.currentTime = 0;
-            const p = videoEl.play();
-            if (p && typeof p.catch === "function") p.catch(() => {});
-          } else {
-            // Stop on the last frame (end)
-            videoEl.pause();
-            videoEl.currentTime = Math.max(0, (videoEl.duration || 0) - 0.05);
-          }
-        });
+        // Populate UI
+        (function initAd(cfg) {
+            const headlineEl = document.getElementById("headline");
+            const logoEl = document.getElementById("logo");
+            const gameTitleEl = document.getElementById("gameTitle");
+            const gameSubtitleEl = document.getElementById("gameSubtitle");
+            const ctaEl = document.getElementById("cta");
+            const ctaTextEl = document.getElementById("ctaText");
+            const videoWrapEl = document.getElementById("videoWrap");
+            const videoEl = document.getElementById("adVideo");
+            const videoSourceEl = document.getElementById("videoSource");
 
-        // Mark as loaded when ready to play
-        videoEl.addEventListener("canplay", onReady, { once: true });
-        // Fallback: if metadata loads but 'canplay' is delayed, still reveal after a short timeout
-        let fallbackTimer = setTimeout(() => {
-          videoWrapEl.classList.add("is-loaded");
-        }, 2500);
-        videoEl.addEventListener("canplay", () => clearTimeout(fallbackTimer), { once: true });
-      } else {
-        // No video provided: keep placeholder visible and video hidden
-        videoEl.style.display = "none";
-      }
-    })(content);
-  </script>
+            headlineEl.textContent = cfg.headline || "";
+            ctaTextEl.textContent = cfg.ctaText || "Play Now";
+            ctaEl.href = cfg.ctaUrl || "#";
+            ctaEl.setAttribute("aria-label", (cfg.ctaText || "Play Now") + (cfg.gameName ? (" — " + cfg.gameName) : ""));
+            if (cfg.logoUrl) {
+                logoEl.src = cfg.logoUrl;
+                logoEl.alt = cfg.gameName ? (cfg.gameName + " Logo") : "Game Logo";
+            }
+            if (cfg.gameName && String(cfg.gameName).trim()) {
+                gameTitleEl.textContent = String(cfg.gameName).trim();
+            }
+            if (gameSubtitleEl) {
+                gameSubtitleEl.textContent = cfg.subtitle || "The perfect trace";
+            }
+            if (cfg.videoUrl && typeof cfg.videoUrl === "string" && cfg.videoUrl.trim() !== "") {
+                videoSourceEl.src = cfg.videoUrl.trim();
+                videoEl.muted = true;
+                videoEl.autoplay = true;
+                videoEl.playsInline = true;
+                videoEl.setAttribute('playsinline', '');
+                videoEl.setAttribute('webkit-playsinline', '');
+                videoEl.preload = 'auto';
+                videoEl.load();
+
+                let playCount = 0;
+
+                const tryPlay = () => {
+                    if (playCount >= 3) return;
+                    const playAttempt = videoEl.play();
+                    if (playAttempt && typeof playAttempt.catch === "function") {
+                        playAttempt.catch(() => {
+                            setTimeout(() => {
+                                if (!videoEl.paused) return;
+                                videoEl.muted = true;
+                                const p2 = videoEl.play();
+                                if (p2 && typeof p2.catch === 'function') p2.catch(() => { });
+                            }, 300);
+                        });
+                    }
+                };
+
+                const onReady = () => {
+                    videoWrapEl.classList.add("is-loaded");
+                    tryPlay();
+                };
+                videoEl.addEventListener("canplay", onReady, { once: true });
+                let fallbackTimer = setTimeout(() => {
+                    videoWrapEl.classList.add("is-loaded");
+                    tryPlay();
+                }, 2500);
+                videoEl.addEventListener("canplay", () => clearTimeout(fallbackTimer), { once: true });
+                document.addEventListener('visibilitychange', () => {
+                    if (!document.hidden && playCount < 3) {
+                        tryPlay();
+                    }
+                });
+
+                videoEl.addEventListener('ended', () => {
+                    playCount += 1;
+                    if (playCount < 3) {
+                        videoEl.currentTime = 0;
+                        const p = videoEl.play();
+                        if (p && typeof p.catch === 'function') p.catch(() => { });
+                    } else {
+                        videoEl.pause();
+                        if (Number.isFinite(videoEl.duration) && videoEl.duration > 0) {
+                            videoEl.currentTime = Math.max(0, videoEl.duration - 0.05);
+                        }
+                    }
+                });
+            } else {
+                videoEl.style.display = "none";
+            }
+        })(content);
+    </script>
 </body>
+
 </html>
