@@ -91,11 +91,25 @@
             transition: opacity 250ms ease;
         }
 
+        .video-wrap img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 250ms ease;
+        }
+
         .video-wrap.is-loaded .video-placeholder {
             opacity: 0;
         }
 
         .video-wrap.is-loaded video {
+            opacity: 1;
+        }
+
+        .video-wrap.is-loaded img {
             opacity: 1;
         }
 
@@ -199,7 +213,7 @@
             position: absolute;
             top: -50%;
             left: -120%;
-            width: 70%;
+            width: 80%;
             height: 200%;
             background: linear-gradient(120deg,
                     rgba(255, 255, 255, 0) 0%,
@@ -243,6 +257,7 @@
         <section class="ad-frame" aria-describedby="headline gameTitle gameSubtitle">
             <div class="video-wrap" id="videoWrap">
                 <div class="video-placeholder" aria-hidden="true"></div>
+                <img id="adImage" alt="" decoding="async" loading="eager" />
                 <video id="adVideo" playsinline webkit-playsinline muted autoplay preload="auto">
                     <source id="videoSource" src="" type="video/mp4" />
                 </video>
@@ -265,15 +280,14 @@
         const content = {
             gameName: "Connect",
             headline: "Connect start to end - its that simple",
-            toGameText: "Play the game",
+            // toGameText: "Play the game",
             ctaText: "Play Now",
             ctaUrl: "https://timesofindia.onelink.me/mjFd/connectplay",
             logoUrl: "https://static.toiimg.com/photo/122115391.cms",
             subtitle: "The perfect trace",
-            videoUrl: "./connect.mp4"
+            videoUrl: "https://static.toiimg.com/photo/123182688.cms"
         };
 
-        // Populate UI
         (function initAd(cfg) {
             const headlineEl = document.getElementById("headline");
             const logoEl = document.getElementById("logo");
@@ -283,6 +297,7 @@
             const ctaTextEl = document.getElementById("ctaText");
             const videoWrapEl = document.getElementById("videoWrap");
             const videoEl = document.getElementById("adVideo");
+            const imageEl = document.getElementById("adImage");
             const videoSourceEl = document.getElementById("videoSource");
 
             headlineEl.textContent = cfg.headline || "";
@@ -300,61 +315,16 @@
                 gameSubtitleEl.textContent = cfg.subtitle || "The perfect trace";
             }
             if (cfg.videoUrl && typeof cfg.videoUrl === "string" && cfg.videoUrl.trim() !== "") {
-                videoSourceEl.src = cfg.videoUrl.trim();
-                videoEl.muted = true;
-                videoEl.autoplay = true;
-                videoEl.playsInline = true;
-                videoEl.setAttribute('playsinline', '');
-                videoEl.setAttribute('webkit-playsinline', '');
-                videoEl.preload = 'auto';
-                videoEl.load();
-
-                let playCount = 0;
-
-                const tryPlay = () => {
-                    if (playCount >= 3) return;
-                    const playAttempt = videoEl.play();
-                    if (playAttempt && typeof playAttempt.catch === "function") {
-                        playAttempt.catch(() => {
-                            setTimeout(() => {
-                                if (!videoEl.paused) return;
-                                videoEl.muted = true;
-                                const p2 = videoEl.play();
-                                if (p2 && typeof p2.catch === 'function') p2.catch(() => { });
-                            }, 300);
-                        });
-                    }
-                };
-
-                const onReady = () => {
-                    videoWrapEl.classList.add("is-loaded");
-                    tryPlay();
-                };
-                videoEl.addEventListener("canplay", onReady, { once: true });
-                let fallbackTimer = setTimeout(() => {
-                    videoWrapEl.classList.add("is-loaded");
-                    tryPlay();
+                const mediaUrl = cfg.videoUrl.trim();
+                imageEl.alt = cfg.gameName ? `${cfg.gameName} preview` : 'Ad preview';
+                imageEl.src = mediaUrl;
+                videoEl.style.display = 'none';
+                imageEl.addEventListener('load', () => {
+                    videoWrapEl.classList.add('is-loaded');
+                }, { once: true });
+                setTimeout(() => {
+                    videoWrapEl.classList.add('is-loaded');
                 }, 2500);
-                videoEl.addEventListener("canplay", () => clearTimeout(fallbackTimer), { once: true });
-                document.addEventListener('visibilitychange', () => {
-                    if (!document.hidden && playCount < 3) {
-                        tryPlay();
-                    }
-                });
-
-                videoEl.addEventListener('ended', () => {
-                    playCount += 1;
-                    if (playCount < 3) {
-                        videoEl.currentTime = 0;
-                        const p = videoEl.play();
-                        if (p && typeof p.catch === 'function') p.catch(() => { });
-                    } else {
-                        videoEl.pause();
-                        if (Number.isFinite(videoEl.duration) && videoEl.duration > 0) {
-                            videoEl.currentTime = Math.max(0, videoEl.duration - 0.05);
-                        }
-                    }
-                });
             } else {
                 videoEl.style.display = "none";
             }
