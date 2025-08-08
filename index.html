@@ -102,23 +102,50 @@
 
     /* Middle logo */
     .logo {
-      width: clamp(72px, 30%, 130px);
-      max-width: 130px;
+      width: clamp(56px, 18%, 88px);
+      max-width: 88px;
       height: auto;
       object-fit: contain;
       justify-self: center;
       filter: none;
+      flex: 0 0 auto;
     }
 
-    /* Game title below logo */
+    /* Inline brand row: logo + title/subtitle */
+    .branding {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      min-width: 0; /* allow text to wrap if needed */
+    }
+
     .game-title {
       margin: 0;
-      text-align: center;
-      font-size: clamp(16px, 7vw, 28px);
+      text-align: left;
+      font-size: clamp(16px, 6vw, 24px);
       font-weight: 700;
       letter-spacing: 0.2px;
       line-height: 1.15;
       color: var(--text);
+    }
+
+    .subtitle {
+      margin: 4px 0 0 0;
+      text-align: left;
+      font-size: clamp(12px, 4.5vw, 14px);
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      line-height: 1.2;
+      color: var(--muted);
     }
 
     /* CTA - island/pill shape */
@@ -167,7 +194,7 @@
 </head>
 <body>
   <div class="ad-container" role="region" aria-label="Game Ad">
-    <section class="ad-frame" aria-describedby="headline gameTitle">
+    <section class="ad-frame" aria-describedby="headline gameTitle gameSubtitle">
       <!-- Top: square video -->
       <div class="video-wrap" id="videoWrap">
         <div class="video-placeholder" aria-hidden="true"></div>
@@ -179,11 +206,14 @@
       <!-- Headline -->
       <h1 class="headline" id="headline"></h1>
 
-      <!-- Middle logo -->
-      <img class="logo" id="logo" alt="" />
-
-      <!-- Game title below the logo -->
-      <h2 class="game-title" id="gameTitle"></h2>
+      <!-- Inline brand: logo + game title with subtitle -->
+      <div class="branding">
+        <img class="logo" id="logo" alt="" />
+        <div class="brand-text">
+          <h2 class="game-title" id="gameTitle"></h2>
+          <p class="subtitle" id="gameSubtitle"></p>
+        </div>
+      </div>
 
       <!-- CTA -->
       <a class="cta" id="cta" href="#" target="_blank" rel="noopener">
@@ -202,8 +232,9 @@
       ctaText: "Play Now",
       ctaUrl: "https://timesofindia.indiatimes.com/games/connect/today",
       logoUrl: "https://static.toiimg.com/photo/122115391.cms",
+      subtitle: "The perfect trace",
       // Add your MP4 video URL below. The light grey placeholder shows until this can play.
-      videoUrl: "./videoConnect.mp4" // e.g., "https://cdn.example.com/your-video.mp4"
+      videoUrl: "./connect.mp4" // e.g., "https://cdn.example.com/your-video.mp4"
     };
 
     // Populate UI
@@ -211,6 +242,7 @@
       const headlineEl = document.getElementById("headline");
       const logoEl = document.getElementById("logo");
       const gameTitleEl = document.getElementById("gameTitle");
+      const gameSubtitleEl = document.getElementById("gameSubtitle");
       const ctaEl = document.getElementById("cta");
       const ctaTextEl = document.getElementById("ctaText");
       const videoWrapEl = document.getElementById("videoWrap");
@@ -228,9 +260,12 @@
         logoEl.alt = cfg.gameName ? (cfg.gameName + " Logo") : "Game Logo";
       }
 
-      // Game title below logo
+      // Game title and subtitle
       if (cfg.gameName && String(cfg.gameName).trim()) {
         gameTitleEl.textContent = String(cfg.gameName).trim();
+      }
+      if (gameSubtitleEl) {
+        gameSubtitleEl.textContent = cfg.subtitle || "The perfect trace";
       }
 
       // Video setup with graceful loading
